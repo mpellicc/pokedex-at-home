@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: pokedex-at-home
+
+webclient:
+  pokeapi:
+    base-url: https://pokeapi.co/api/v2
+  fun-translations:
+    base-url: https://api.funtranslations.com/translate/
