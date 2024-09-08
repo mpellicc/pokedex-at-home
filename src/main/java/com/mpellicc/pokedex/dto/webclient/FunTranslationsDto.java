@@ -2,6 +2,7 @@ package com.mpellicc.pokedex.dto.webclient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.apache.commons.lang3.ObjectUtils;
 
 @Getter
 @Setter
@@ -25,5 +26,9 @@ public class FunTranslationsDto {
 
         @JsonProperty("translated")
         private String translated;
+
+        public static boolean isNull(Content obj) {
+            return obj == null || ObjectUtils.allNull(obj.translated, obj.text, obj.translated);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.mpellicc.pokedex.mapper;
 
 import com.mpellicc.pokedex.dto.PokemonDto;
 import com.mpellicc.pokedex.dto.webclient.PokeApiDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public class PokeApiDto2PokemonDtoMapper implements Function<PokeApiDto, Pokemon
 
     @Override
     public PokemonDto apply(PokeApiDto pokeApiDto) {
+        if (pokeApiDto == null) {
+            return null;
+        }
+
         return PokemonDto.builder()
                 .name(pokeApiDto.getName())
                 .description(getDescription(pokeApiDto.getFlavorTextEntries()))
@@ -21,10 +26,15 @@ public class PokeApiDto2PokemonDtoMapper implements Function<PokeApiDto, Pokemon
                         null
                         : pokeApiDto.getHabitat().getName())
                 .isLegendary(pokeApiDto.isLegendary())
+                .isMythical(pokeApiDto.isMythical())
                 .build();
     }
 
     private String getDescription(List<PokeApiDto.FlavorText> flavorTextEntries) {
+        if (CollectionUtils.isEmpty(flavorTextEntries)) {
+            return null;
+        }
+
         List<String> flavorTexts = flavorTextEntries.stream()
                 .filter(fte -> "en".equalsIgnoreCase(fte.getLanguage().getName()))
                 .map(PokeApiDto.FlavorText::getFlavorText)

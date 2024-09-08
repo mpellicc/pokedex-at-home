@@ -20,4 +20,7 @@ public class PokemonDto {
 
     @JsonProperty("isLegendary")
     private boolean isLegendary;
+
+    @JsonProperty("isMythical")
+    private boolean isMythical;
 }
