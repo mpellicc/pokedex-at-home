@@ -18,6 +18,9 @@ public class PokeApiDto {
     @JsonProperty("is_legendary")
     private boolean isLegendary;
 
+    @JsonProperty("is_mythical")
+    private boolean isMythical;
+
     @JsonProperty("flavor_text_entries")
     @Builder.Default
     private List<FlavorText> flavorTextEntries = new ArrayList<>();
@@ -48,6 +51,9 @@ public class PokeApiDto {
         public static class Language {
             @JsonProperty("name")
             private String name;
+
+            @JsonProperty("url")
+            private String url;
         }
     }
 }

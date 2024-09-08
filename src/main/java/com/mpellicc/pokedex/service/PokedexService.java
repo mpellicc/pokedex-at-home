@@ -1,13 +1,17 @@
 package com.mpellicc.pokedex.service;
 
 import com.mpellicc.pokedex.dto.PokemonDto;
+import com.mpellicc.pokedex.enumeration.ErrorMessage;
+import com.mpellicc.pokedex.exception.FunTranslationsException;
 import com.mpellicc.pokedex.mapper.PokeApiDto2PokemonDtoMapper;
 import com.mpellicc.pokedex.webclient.FunTranslationsRestClient;
 import com.mpellicc.pokedex.webclient.PokeApiRestClient;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class PokedexService {
 
     private final PokeApiRestClient pokeApiRestClient;
@@ -34,7 +38,7 @@ public class PokedexService {
 
     private String translateDescription(PokemonDto pokemon) {
         if (pokemon == null || StringUtils.isBlank(pokemon.getDescription())) {
-            throw new IllegalArgumentException("Invalid Pokémon object");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_POKEMON.getMessage());
         }
 
         try {
@@ -50,7 +54,8 @@ public class PokedexService {
 
             return funTranslationsRestClient.translate(pokemon.getDescription(),
                     FunTranslationsRestClient.Language.SHAKESPEARE);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            log.warn("Could not translate description, using default one.", ex);
             return pokemon.getDescription();
         }
     }
