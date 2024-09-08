@@ -33,7 +33,7 @@ class FunTranslationsRestClientTest {
      * Probably can change it into ParameterizedTest with FunTranslationsDto.Language values
      */
     @Test
-    void translate_ok() throws Exception {
+    void translate_ok() {
         //region YODA
         // given
         String mockYodaResponse = "{ \"contents\": { \"translated\": \"yoda translated text\" } }";

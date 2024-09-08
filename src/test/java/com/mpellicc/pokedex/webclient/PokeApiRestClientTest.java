@@ -31,7 +31,7 @@ class PokeApiRestClientTest {
     }
 
     @Test
-    void getPokemon_ok() throws Exception {
+    void getPokemon_ok() {
         // given
         String mockResponseBody = "{ \"name\": \"pikachu\" }";
         mockWebServer.enqueue(new MockResponse()

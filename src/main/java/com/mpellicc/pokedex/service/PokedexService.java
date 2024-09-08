@@ -2,7 +2,6 @@ package com.mpellicc.pokedex.service;
 
 import com.mpellicc.pokedex.dto.PokemonDto;
 import com.mpellicc.pokedex.enumeration.ErrorMessage;
-import com.mpellicc.pokedex.exception.FunTranslationsException;
 import com.mpellicc.pokedex.mapper.PokeApiDto2PokemonDtoMapper;
 import com.mpellicc.pokedex.webclient.FunTranslationsRestClient;
 import com.mpellicc.pokedex.webclient.PokeApiRestClient;
