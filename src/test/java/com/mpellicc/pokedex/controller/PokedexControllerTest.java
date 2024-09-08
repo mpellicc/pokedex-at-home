@@ -41,7 +41,8 @@ class PokedexControllerTest {
                 .andExpect(jsonPath("$.name").value(expected.getName()))
                 .andExpect(jsonPath("$.description").value(expected.getDescription()))
                 .andExpect(jsonPath("$.habitat").value(expected.getHabitat()))
-                .andExpect(jsonPath("$.isLegendary").value(expected.isLegendary()));
+                .andExpect(jsonPath("$.isLegendary").value(expected.isLegendary()))
+                .andExpect(jsonPath("$.isMythical").value(expected.isMythical()));
     }
 
     @Test
@@ -54,6 +55,7 @@ class PokedexControllerTest {
                 .andExpect(jsonPath("$.name").value(expected.getName()))
                 .andExpect(jsonPath("$.description").value(expected.getDescription()))
                 .andExpect(jsonPath("$.habitat").value(expected.getHabitat()))
-                .andExpect(jsonPath("$.isLegendary").value(expected.isLegendary()));
+                .andExpect(jsonPath("$.isLegendary").value(expected.isLegendary()))
+                .andExpect(jsonPath("$.isMythical").value(expected.isMythical()));
     }
 }

@@ -9,13 +9,18 @@ import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -64,7 +69,7 @@ class PokedexServiceTest {
     }
 
     @Test
-    void getTranslatedPokemon_yoda_caveHabitat() {
+    void getTranslatedPokemon_withYodaLanguage_whenHabitatIsCave() {
         // given
         PokeApiDto.PokemonHabitat habitat = new PokeApiDto.PokemonHabitat();
         habitat.setName("cave");
@@ -98,7 +103,7 @@ class PokedexServiceTest {
     }
 
     @Test
-    void getTranslatedPokemon_yoda_legendary() {
+    void getTranslatedPokemon_withYodaLanguage_whenIsLegendary() {
         // given
         List<PokeApiDto.FlavorText> flavorTexts = IntStream.range(0, 3)
                 .mapToObj(i -> new EasyRandom().nextObject(PokeApiDto.FlavorText.class).toBuilder()
@@ -129,7 +134,7 @@ class PokedexServiceTest {
     }
 
     @Test
-    void getTranslatedPokemon_shakespeare() {
+    void getTranslatedPokemon_withShakespeareLanguage() {
         // given
         PokeApiDto.PokemonHabitat habitat = new PokeApiDto.PokemonHabitat();
         habitat.setName("rare");
@@ -163,7 +168,7 @@ class PokedexServiceTest {
     }
 
     @Test
-    void getTranslatedPokemon() {
+    void getTranslatedPokemon_withDefaultDescription_whenFunTranslationsKo() {
         // given
         PokeApiDto.PokemonHabitat habitat = new PokeApiDto.PokemonHabitat();
         habitat.setName("rare");
@@ -181,7 +186,7 @@ class PokedexServiceTest {
                 .build();
         doReturn(pokeDto).when(pokeApiRestClient).getPokemon(anyString());
 
-        doThrow(new IllegalArgumentException())
+        doThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404)))
                 .when(funTranslationsRestClient).translate(anyString(), any(FunTranslationsRestClient.Language.class));
 
         // when
@@ -194,5 +199,33 @@ class PokedexServiceTest {
         assertThat(result.isLegendary()).isEqualTo(pokeDto.isLegendary());
         assertThat(pokeDto.getFlavorTextEntries().stream().map(PokeApiDto.FlavorText::getFlavorText))
                 .contains(result.getDescription());
+    }
+
+    @Test
+    void getTranslatedPokemon_shouldThrowIllegalArgumentException_whenDescriptionIsBlank() {
+        // given
+        PokeApiDto pokeDto = new EasyRandom().nextObject(PokeApiDto.class).toBuilder()
+                .isLegendary(false)
+                .flavorTextEntries(Collections.emptyList())
+                .build();
+        doReturn(pokeDto).when(pokeApiRestClient).getPokemon(anyString());
+
+        // when
+        Executable exec = () -> pokedexService.getTranslatedPokemon("test");
+
+        // then
+        assertThrows(IllegalArgumentException.class, exec);
+    }
+
+    @Test
+    void getTranslatedPokemon_shouldThrowIllegalArgumentException_whenPokemonIsNull() {
+        // given
+        doReturn(null).when(pokeApiRestClient).getPokemon(anyString());
+
+        // when
+        Executable exec = () -> pokedexService.getTranslatedPokemon("test");
+
+        // then
+        assertThrows(IllegalArgumentException.class, exec);
     }
 }
