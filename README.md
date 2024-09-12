@@ -13,16 +13,16 @@ your favorite Pokémon information.
 ## Technologies Used
 
 ### Business Logic
-- **Spring Boot**: For RESTful services and dependency injection.
-- **RestClient**: For API communication.
-- **Lombok**: For reducing boilerplate code.
+- **Spring Boot**: Provides RESTful services and dependency injection.
+- **RestClient**: Manages API communication.
+- **Lombok**: Reduces boilerplate code.
 
 ### Testing
 - **JUnit**: For unit testing.
 - **Mockito**: For mocking dependencies in tests.
 
 ### Containerization
-- **Docker**: For building and running containers.
+- **Docker**: For containerizing the application.
 
 ## Getting Started
 
@@ -45,10 +45,9 @@ cd pokedex-at-home
 mvn clean install
 mvn spring-boot:run
 ```
-The application will run at http://localhost:8080.
+The application will be available at http://localhost:8080.
 
 #### Running Tests
-To run the unit and integration tests:
 
 ```bash
 mvn test
@@ -88,6 +87,56 @@ The project includes a multi-stage Dockerfile:
 - Runtime Stage: Runs the packaged application using a lightweight Java runtime.
 
 Feel free to modify the Dockerfile and Docker Compose file as needed.
+
+### Configuring Environment Variables
+To manage environment-specific configurations, use separate `application-{environment}.yml` files.
+
+1. **Create Environment Configuration Files**
+   - Place these files under `src/main/resources`:
+     - `application-dev.yml` for development
+     - `application-prod.yml` for production
+
+2. **Define Environment Variables**
+   - In each configuration file, specify environment-specific properties. Example:
+     ```yaml
+     # application-dev.yml
+     server:
+       port: 8080
+     logging:
+       level:
+         root: DEBUG
+     ```
+
+3. **Specify the Active Profile**
+   - **For Docker**
+     - Run the container with the `SPRING_PROFILES_ACTIVE` environment variable to specify which profile to use:
+       ```bash
+       docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev pokedex-at-home
+       ```
+
+   - **For Docker Compose**
+     - You need to set environment variables in the `docker-compose.yml` file. 
+     Add the `SPRING_PROFILES_ACTIVE` environment variable under the `environment` section.
+     Example:
+       ```yaml
+       version: '3.8'
+       services:
+         app:
+           image: pokedex-at-home
+           ports:
+             - "8080:8080"
+           environment:
+             - SPRING_PROFILES_ACTIVE=dev
+       ```
+     - Then run:
+       ```bash
+       docker compose up --build
+       ```
+
+4. **Verify Configuration**
+   - Ensure the application correctly picks up settings from the specified environment profile.
+
+
 
 ## API Documentation
 
