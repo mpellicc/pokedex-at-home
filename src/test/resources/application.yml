@@ -2,6 +2,10 @@ spring:
   application:
     name: pokedex-at-home
 
+springdoc:
+  title: Pokédex At Home
+  version: v1
+
 webclient:
   pokeapi:
     base-url: https://pokeapi.co/api/v2
